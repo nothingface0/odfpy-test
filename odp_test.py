@@ -39,15 +39,19 @@ class Presentation(object):
         # or "photo").
         self.titlestyle = Style(name="MyMaster-title", family="presentation")
         self.titlestyle.addElement(ParagraphProperties(textalign="center"))
-        self.titlestyle.addElement(TextProperties(fontsize="70pt"))
-        self.titlestyle.addElement(GraphicProperties(fillcolor="#ffffff"))
+        self.titlestyle.addElement(TextProperties(fontsize="30pt", fontfamily="sans"))
+        self.titlestyle.addElement(
+            GraphicProperties(fillcolor="#ffffff", strokecolor="#ffffff")
+        )
         self.doc.styles.addElement(self.titlestyle)
 
         # Style for adding content
         self.teststyle = Style(name="MyMaster-subtitle", family="presentation")
-        self.teststyle.addElement(ParagraphProperties(textalign="right"))
-        self.teststyle.addElement(TextProperties(fontsize="20pt"))
-        self.teststyle.addElement(GraphicProperties(fillcolor="#ffffff"))
+        self.teststyle.addElement(ParagraphProperties(textalign="left"))
+        self.teststyle.addElement(TextProperties(fontsize="14pt", fontfamily="sans"))
+        self.teststyle.addElement(
+            GraphicProperties(fillcolor="#ffffff", strokecolor="#ffffff")
+        )
         self.doc.styles.addElement(self.teststyle)
 
         # Style for images
@@ -82,7 +86,7 @@ class Presentation(object):
         self.doc.presentation.addElement(page)
 
         titleframe = Frame(
-            stylename=self.titlestyle, width="25cm", height="2cm", x="1.5cm", y="0.5cm"
+            stylename=self.titlestyle, width="25cm", height="2cm", x="1.5cm", y="2cm"
         )
         textbox = TextBox()
         titleframe.addElement(textbox)
