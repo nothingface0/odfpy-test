@@ -30,38 +30,53 @@ class Presentation(object):
             )
         )
 
-        titlestyle = Style(name="MyMaster-title", family="presentation")
-        titlestyle.addElement(ParagraphProperties(textalign="center"))
-        titlestyle.addElement(TextProperties(fontsize="34pt"))
-        titlestyle.addElement(GraphicProperties(fillcolor="#ffff99"))
-        self.doc.styles.addElement(titlestyle)
+        self.titlestyle = Style(name="MyMaster-title", family="presentation")
+        self.titlestyle.addElement(ParagraphProperties(textalign="center"))
+        self.titlestyle.addElement(TextProperties(fontsize="34pt"))
+        self.titlestyle.addElement(GraphicProperties(fillcolor="#ffff99"))
+        self.doc.styles.addElement(self.titlestyle)
 
-        photostyle = Style(name="MyMaster-photo", family="presentation")
-        self.doc.styles.addElement(photostyle)
+        self.photostyle = Style(name="MyMaster-photo", family="presentation")
+        self.doc.styles.addElement(self.photostyle)
 
-        masterpage = MasterPage(name="MyMaster", pagelayoutname=pagelayout)
-        self.doc.masterstyles.addElement(masterpage)
+        self.dpstyle = Style(name="dp1", family="drawing-page")
+        self.dpstyle.addElement(
+            DrawingPageProperties(
+                transitiontype="automatic",
+                transitionstyle="move-from-top",
+                duration="PT05S",
+            )
+        )
+        self.doc.automaticstyles.addElement(self.dpstyle)
+
+        self.masterpage = MasterPage(name="MyMaster", pagelayoutname=pagelayout)
+        self.doc.masterstyles.addElement(self.masterpage)
 
     def save(self, filename: str) -> None:
         self.doc.save(outputfile=filename)
 
-    def add_header(self, header_text: str):
-        # odf.element.IllegalChild: <text:title> is not allowed in <office:presentation>
-        h = Title(text=header_text)
+    def add_page(self, title: str):
+        page = Page(stylename=self.dpstyle, masterpagename=self.masterpage)
+        self.doc.presentation.addElement(page)
+        titleframe = Frame(
+            stylename=self.titlestyle, width="25cm", height="2cm", x="1.5cm", y="0.5cm"
+        )
 
-        # odf.element.IllegalChild: <presentation:header> is not allowed in <office:presentation>
-        # h = Header()
+        textbox = TextBox()
+        titleframe.addElement(textbox)
+        textbox.addElement(P(text=title))
+        page.addElement(titleframe)
 
-        # odf.element.IllegalChild: <text:h> is not allowed in <office:presentation>
-        # h = H(text=header_text, outlinelevel=1)
-
-        # self.doc.body.addElement(h)
-        self.doc.presentation.addElement(h)
+        # photoframe = Frame(stylename=photostyle, width="25cm", height="18.75cm", x="1.5cm", y="2.5cm")
+        # page.addElement(photoframe)
+        # href = self.doc.addPicture(picture[0])
+        # photoframe.addElement(Image(href=href))
 
 
 def main():
     p = Presentation()
-    # p.add_header("OMG LOL")
+    for word in "oh cool wow so amazing".split():
+        p.add_page(word)
     p.save(filename="test.odp")
 
 
