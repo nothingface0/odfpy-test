@@ -74,9 +74,14 @@ class Presentation(object):
         self.doc.masterstyles.addElement(self.masterpage)
 
         # Metadata
-        # self.doc.meta.addElement(dc.Title(text="OMG"))
-        # self.doc.meta.addElement(dc.Date(text=str(datetime.now())))
+        self.doc.meta.addElement(
+            dc.Title(text="Shiftleader Report for week <week num>")
+        )
+        self.doc.meta.addElement(dc.Date(text=datetime.now().isoformat()))
         # self.doc.meta.addElement(dc.Subject(text="Shiftleader Report"))
+        self.doc.meta.addElement(
+            dc.Creator(text="CertHelper version <version>, requested by <username>")
+        )
 
     def save(self, filename: str) -> None:
         self.doc.save(outputfile=filename)
