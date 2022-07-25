@@ -14,4 +14,4 @@
 
 ## Links
 
-* [OpenDocument standard 1.2](http://docs.oasis-open.org/office/v1.2/OpenDocument-v1.2.pdf)
+* [OpenDocument standard 1.2](http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os.pdf)
