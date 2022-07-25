@@ -34,15 +34,15 @@ class Presentation(object):
         # Style for page titles
         self.titlestyle = Style(name="MyMaster-title", family="presentation")
         self.titlestyle.addElement(ParagraphProperties(textalign="center"))
-        self.titlestyle.addElement(TextProperties(fontsize="34pt"))
-        self.titlestyle.addElement(GraphicProperties(fillcolor="#ffff99"))
+        self.titlestyle.addElement(TextProperties(fontsize="50pt"))
+        self.titlestyle.addElement(GraphicProperties(fillcolor="#ffffff"))
         self.doc.styles.addElement(self.titlestyle)
 
         # Style for adding content
         self.contentstyle = Style(name="MyMaster-content", family="presentation")
         self.contentstyle.addElement(ParagraphProperties(textalign="left"))
-        self.contentstyle.addElement(TextProperties(fontsize="12pt"))
-        self.contentstyle.addElement(GraphicProperties(fillcolor="#000000"))
+        self.contentstyle.addElement(TextProperties(fontsize="40pt"))
+        self.contentstyle.addElement(GraphicProperties(fillcolor="#ffffff"))
         self.doc.styles.addElement(self.contentstyle)
 
         # Style for images
@@ -53,9 +53,9 @@ class Presentation(object):
         self.dpstyle = Style(name="dp1", family="drawing-page")
         self.dpstyle.addElement(
             DrawingPageProperties(
-                transitiontype="automatic",
-                transitionstyle="move-from-top",
-                duration="PT05S",
+                transitiontype="none",
+                # transitionstyle="move-from-top",
+                duration="PT00S",
             )
         )
         self.doc.automaticstyles.addElement(self.dpstyle)
@@ -79,8 +79,6 @@ class Presentation(object):
         page.addElement(titleframe)
 
         if content:
-            c_text = TextBox()
-            c_text.addElement(P(text=content))
             c_frame = Frame(
                 stylename=self.contentstyle,
                 width="25cm",
@@ -88,7 +86,9 @@ class Presentation(object):
                 x="1.5cm",
                 y="7cm",
             )
+            c_text = TextBox()
             c_frame.addElement(c_text)
+            c_text.addElement(P(text=content))
             page.addElement(c_frame)
 
         # photoframe = Frame(stylename=photostyle, width="25cm", height="18.75cm", x="1.5cm", y="2.5cm")
