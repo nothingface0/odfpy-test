@@ -1,3 +1,4 @@
+import lorem
 from odf.opendocument import OpenDocumentText, OpenDocumentPresentation
 from odf.style import (
     Style,
@@ -30,15 +31,25 @@ class Presentation(object):
             )
         )
 
+        # Style for page titles
         self.titlestyle = Style(name="MyMaster-title", family="presentation")
         self.titlestyle.addElement(ParagraphProperties(textalign="center"))
         self.titlestyle.addElement(TextProperties(fontsize="34pt"))
         self.titlestyle.addElement(GraphicProperties(fillcolor="#ffff99"))
         self.doc.styles.addElement(self.titlestyle)
 
+        # Style for adding content
+        self.contentstyle = Style(name="MyMaster-content", family="presentation")
+        self.contentstyle.addElement(ParagraphProperties(textalign="left"))
+        self.contentstyle.addElement(TextProperties(fontsize="12pt"))
+        self.contentstyle.addElement(GraphicProperties(fillcolor="#000000"))
+        self.doc.styles.addElement(self.contentstyle)
+
+        # Style for images
         self.photostyle = Style(name="MyMaster-photo", family="presentation")
         self.doc.styles.addElement(self.photostyle)
 
+        # Style for pages and transitions
         self.dpstyle = Style(name="dp1", family="drawing-page")
         self.dpstyle.addElement(
             DrawingPageProperties(
@@ -55,17 +66,30 @@ class Presentation(object):
     def save(self, filename: str) -> None:
         self.doc.save(outputfile=filename)
 
-    def add_page(self, title: str):
+    def add_page(self, title: str, content: str):
         page = Page(stylename=self.dpstyle, masterpagename=self.masterpage)
         self.doc.presentation.addElement(page)
+
         titleframe = Frame(
             stylename=self.titlestyle, width="25cm", height="2cm", x="1.5cm", y="0.5cm"
         )
-
         textbox = TextBox()
         titleframe.addElement(textbox)
         textbox.addElement(P(text=title))
         page.addElement(titleframe)
+
+        if content:
+            c_text = TextBox()
+            c_text.addElement(P(text=content))
+            c_frame = Frame(
+                stylename=self.contentstyle,
+                width="25cm",
+                height="4cm",
+                x="1.5cm",
+                y="7cm",
+            )
+            c_frame.addElement(c_text)
+            page.addElement(c_frame)
 
         # photoframe = Frame(stylename=photostyle, width="25cm", height="18.75cm", x="1.5cm", y="2.5cm")
         # page.addElement(photoframe)
@@ -75,8 +99,8 @@ class Presentation(object):
 
 def main():
     p = Presentation()
-    for word in "oh cool wow so amazing".split():
-        p.add_page(word)
+    for word in "What's next for Brussels, pooping eagles?".split():
+        p.add_page(title=word, content=next(lorem.paragraph(count=1)))
     p.save(filename="test.odp")
 
 
