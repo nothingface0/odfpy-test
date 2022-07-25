@@ -1,4 +1,5 @@
 import lorem
+from datetime import datetime
 from odf.opendocument import OpenDocumentText, OpenDocumentPresentation
 from odf.style import (
     Style,
@@ -10,6 +11,7 @@ from odf.style import (
     ParagraphProperties,
     DrawingPageProperties,
 )
+from odf import dc
 from odf.text import P
 from odf.presentation import Header
 from odf.text import Title, H
@@ -32,22 +34,25 @@ class Presentation(object):
         )
 
         # Style for page titles
+        # The name attribute *must* start with the name of the masterpage
+        # The name after the dash *also* matters (should be "title", "subtitle"
+        # or "photo").
         self.titlestyle = Style(name="MyMaster-title", family="presentation")
         self.titlestyle.addElement(ParagraphProperties(textalign="center"))
-        self.titlestyle.addElement(TextProperties(fontsize="50pt"))
+        self.titlestyle.addElement(TextProperties(fontsize="70pt"))
         self.titlestyle.addElement(GraphicProperties(fillcolor="#ffffff"))
         self.doc.styles.addElement(self.titlestyle)
 
         # Style for adding content
-        self.contentstyle = Style(name="MyMaster-content", family="presentation")
-        self.contentstyle.addElement(ParagraphProperties(textalign="left"))
-        self.contentstyle.addElement(TextProperties(fontsize="40pt"))
-        self.contentstyle.addElement(GraphicProperties(fillcolor="#ffffff"))
-        self.doc.styles.addElement(self.contentstyle)
+        self.teststyle = Style(name="MyMaster-subtitle", family="presentation")
+        self.teststyle.addElement(ParagraphProperties(textalign="right"))
+        self.teststyle.addElement(TextProperties(fontsize="20pt"))
+        self.teststyle.addElement(GraphicProperties(fillcolor="#ffffff"))
+        self.doc.styles.addElement(self.teststyle)
 
         # Style for images
-        self.photostyle = Style(name="MyMaster-photo", family="presentation")
-        self.doc.styles.addElement(self.photostyle)
+        # self.photostyle = Style(name="MyMaster-photo", family="presentation")
+        # self.doc.styles.addElement(self.photostyle)
 
         # Style for pages and transitions
         self.dpstyle = Style(name="dp1", family="drawing-page")
@@ -60,8 +65,14 @@ class Presentation(object):
         )
         self.doc.automaticstyles.addElement(self.dpstyle)
 
+        # Every drawing page must have a master page assigned to it.
         self.masterpage = MasterPage(name="MyMaster", pagelayoutname=pagelayout)
         self.doc.masterstyles.addElement(self.masterpage)
+
+        # Metadata
+        # self.doc.meta.addElement(dc.Title(text="OMG"))
+        # self.doc.meta.addElement(dc.Date(text=str(datetime.now())))
+        # self.doc.meta.addElement(dc.Subject(text="Shiftleader Report"))
 
     def save(self, filename: str) -> None:
         self.doc.save(outputfile=filename)
@@ -80,7 +91,8 @@ class Presentation(object):
 
         if content:
             c_frame = Frame(
-                stylename=self.contentstyle,
+                stylename=self.teststyle,
+                # stylename=self.titlestyle,
                 width="25cm",
                 height="4cm",
                 x="1.5cm",
