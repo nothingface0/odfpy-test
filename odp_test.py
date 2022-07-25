@@ -21,7 +21,8 @@ class Presentation(object):
         # odf.element.IllegalChild: <text:h> is not allowed in <office:presentation>
         # h = H(text=header_text, outlinelevel=1)
 
-        # self.doc.presentation.addElement(h)
+        # self.doc.body.addElement(h)
+        self.doc.presentation.addElement(h)
 
 
 def main():
