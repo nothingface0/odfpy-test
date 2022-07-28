@@ -12,7 +12,7 @@ from odf.style import (
     TableProperties,
 )
 from odf import dc
-from odf.text import P, List, ListItem, ListLevelStyleBullet
+from odf.text import P, List, ListItem, ListLevelStyleBullet, PageNumber, H
 from odf.presentation import Header
 from odf.draw import Page, Frame, TextBox, Image
 from odf.table import Table, TableColumn, TableRow, TableCell
@@ -44,19 +44,24 @@ def main():
     # Style name must be in the format <master page name>-<element type>
     # If family="presentation", they can also contain ParagraphProperties
     # and TextProperties
-    titlestyle = Style(name="Master1-text", family="presentation")
-    titlestyle.addElement(
+    style_master1_title = Style(name="Master1-title", family="presentation")
+    style_master1_title.addElement(
         ParagraphProperties(textalign="center", verticalalign="middle")
     )
-    titlestyle.addElement(TextProperties(fontsize="44pt", fontfamily="sans"))
-    titlestyle.addElement(GraphicProperties(fill="none", stroke="none"))
-    doc.styles.addElement(titlestyle)
+    style_master1_title.addElement(TextProperties(fontsize="44pt", fontfamily="sans"))
+    style_master1_title.addElement(GraphicProperties(fill="none", stroke="none"))
+    doc.styles.addElement(style_master1_title)
+
+    # Try a style for tables
+    style_master1_table = Style(name="Master1-table", family="presentation")
+    style_master1_table.addElement(TextProperties(fontsize="20pt", fontfamily="Impact"))
+    doc.styles.addElement(style_master1_table)
 
     # Add title page - Master1
     page = Page(masterpagename=masterpage)
     doc.presentation.addElement(page)
     titleframe = Frame(
-        stylename=titlestyle,
+        stylename=style_master1_title,
         width="612pt",
         height="115.7pt",
         x="54pt",
@@ -64,9 +69,35 @@ def main():
     )
     textbox = TextBox()
     titleframe.addElement(textbox)
-
     textbox.addElement(P(text="Offline Shift Leader Report"))
     page.addElement(titleframe)
+
+    # Create a table on a new page
+    page = Page(masterpagename=masterpage)
+    doc.presentation.addElement(page)
+    frame = Frame(
+        width="648pt",
+        height="105pt",
+        x="40pt",
+        y="117pt",
+    )
+    page.addElement(frame)
+    table = Table()
+    table.addElement(TableColumn())
+    table.addElement(TableColumn())
+
+    tr = TableRow()
+    table.addElement(tr)
+
+    tc = TableCell()
+    tc.addElement(P(text="Header1"))
+    tr.addElement(tc)
+
+    tc = TableCell()
+    tc.addElement(P(text="Header2"))
+    tr.addElement(tc)
+
+    frame.addElement(table)
 
     #####################################
     doc.save("table_in_presentation.odp")
