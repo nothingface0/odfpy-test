@@ -1,6 +1,6 @@
 import lorem
 from datetime import datetime
-from odf.opendocument import OpenDocumentText, OpenDocumentPresentation
+from odf.opendocument import OpenDocumentPresentation
 from odf.style import (
     Style,
     MasterPage,
@@ -14,7 +14,6 @@ from odf.style import (
 from odf import dc
 from odf.text import P
 from odf.presentation import Header
-from odf.text import Title, H
 from odf.draw import Page, Frame, TextBox, Image
 
 
