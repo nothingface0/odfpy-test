@@ -99,11 +99,12 @@ def main():
     doc.presentation.addElement(page)
 
     WIDTH_FRAME = 648
+    HEIGHT_FRAME = 105
 
     frame = Frame(
         stylename=style_master1_table,
         width=f"{WIDTH_FRAME}pt",
-        height="105pt",
+        height=f"{HEIGHT_FRAME}pt",
         x="40pt",
         y="117pt",
     )
@@ -116,7 +117,11 @@ def main():
     # Style for cells
     style_cell = Style(name="ce1", family="table-cell")
     style_cell.addElement(
-        GraphicProperties(fillcolor="#dddddd", textareaverticalalign="middle")
+        GraphicProperties(
+            fillcolor="#dddddd",
+            backgroundcolor="#dddddd",
+            textareaverticalalign="middle",
+        )
     )
     style_cell.addElement(ParagraphProperties(writingmode="lr-tb", textalign="right"))
     style_cell.addElement(
@@ -127,7 +132,11 @@ def main():
     # Style for cells in header
     style_cell_header = Style(name="ce2", family="table-cell")
     style_cell_header.addElement(
-        GraphicProperties(fillcolor="#aaaaaa", textareaverticalalign="middle")
+        GraphicProperties(
+            fillcolor="#aaaaaa",
+            textareaverticalalign="middle",
+            backgroundcolor="#aaaaaa",
+        )
     )
     style_cell_header.addElement(
         ParagraphProperties(writingmode="lr-tb", textalign="right")
@@ -139,25 +148,28 @@ def main():
     )
     doc.automaticstyles.addElement(style_cell_header)
 
-    # Style for rows
-    style_row = Style(name="ro1", family="table-row")
-    style_row.addElement(TableRowProperties(rowheight="2in"))
-    doc.automaticstyles.addElement(style_row)
-
     style_span = Style(name="sp1", family="text")
     style_span.addElement(TextProperties(fontfamily="sans"))
     doc.automaticstyles.addElement(style_span)
 
     NUM_ROWS = 10
     NUM_COLS = 5
-    WIDTH_COL = 50
+    WIDTH_COL = 100
+    HEIGHT_ROW = 50
 
     table = Table(usebandingcolumnsstyles="false", usebandingrowsstyles="false")
 
     # Table *must* amount to total frame width. Cols are autosized if total
     # width is less than frame width
+
+    # Style for rows
+    style_row = Style(name="roh", family="table-row")
+    style_row.addElement(TableRowProperties(rowheight=f"{HEIGHT_ROW}pt"))
+    doc.automaticstyles.addElement(style_row)
     tr = TableRow(defaultcellstylename=style_cell_header, stylename=style_row)
+
     for i in range(NUM_COLS):
+        # Last col gets remaining width
         width_col = (
             WIDTH_COL if i < NUM_COLS - 1 else WIDTH_FRAME - (NUM_COLS - 1) * WIDTH_COL
         )
@@ -175,7 +187,16 @@ def main():
     table.addElement(tr)
 
     for i in range(NUM_ROWS):
+        height_row = (
+            HEIGHT_ROW
+            if i < NUM_ROWS - 1
+            else HEIGHT_FRAME - (NUM_ROWS - 1) * HEIGHT_ROW
+        )
+        style_row = Style(name=f"ro{i}", family="table-row")
+        style_row.addElement(TableRowProperties(rowheight=f"{height_row}pt"))
+        doc.automaticstyles.addElement(style_row)
         tr = TableRow(defaultcellstylename=style_cell, stylename=style_row)
+
         for j in range(NUM_COLS):
             tc = TableCell()
             p = P()
