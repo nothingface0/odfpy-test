@@ -98,9 +98,11 @@ def main():
     page = Page(masterpagename=masterpage)
     doc.presentation.addElement(page)
 
+    WIDTH_FRAME = 648
+
     frame = Frame(
         stylename=style_master1_table,
-        width="648pt",
+        width=f"{WIDTH_FRAME}pt",
         height="105pt",
         x="40pt",
         y="117pt",
@@ -142,18 +144,24 @@ def main():
     style_row.addElement(TableRowProperties(rowheight="2in"))
     doc.automaticstyles.addElement(style_row)
 
-    # Style for columns
-    style_column = Style(name="co1", family="table-column")
-    style_column.addElement(TableColumnProperties(columnwidth="5.5in"))
-    doc.automaticstyles.addElement(style_column)
-
     NUM_ROWS = 10
     NUM_COLS = 5
+    WIDTH_COL = 50
 
     table = Table(usebandingcolumnsstyles="false", usebandingrowsstyles="false")
 
+    # Table *must* amount to total frame width. Cols are autosized if total
+    # width is less than frame width
     tr = TableRow(defaultcellstylename=style_cell_header, stylename=style_row)
     for i in range(NUM_COLS):
+        width_col = (
+            WIDTH_COL if i < NUM_COLS - 1 else WIDTH_FRAME - (NUM_COLS - 1) * WIDTH_COL
+        )
+        # Style for columns
+        style_column = Style(name=f"co{i}", family="table-column")
+        style_column.addElement(TableColumnProperties(columnwidth=f"{width_col}pt"))
+        doc.automaticstyles.addElement(style_column)
+
         table.addElement(TableColumn(defaultcellstylename="", stylename=style_column))
         tc = TableCell()
         tc.addElement(P(text=f"Header{i}"))
