@@ -12,6 +12,7 @@ from odf.style import (
     TableProperties,
     TableCellProperties,
     TableColumnProperties,
+    TableRowProperties,
 )
 from odf import dc
 from odf.text import P, List, ListItem, ListLevelStyleBullet, PageNumber, H
@@ -92,41 +93,82 @@ def main():
     )
     page.addElement(frame)
 
-    prop_graphic = GraphicProperties(fillcolor="#ffffff")
-    prop_graphic_header = GraphicProperties(fillcolor="#dddddd")
+    # Style for table
+    style_table = Style(name="tab1", family="table")
+    style_table.addElement(TableProperties(writingmode="lr-tb"))
 
-    ## Style for cells
+    # Style for cells
     style_cell = Style(name="ce1", family="table-cell")
-    style_cell.addElement(prop_graphic)
+    style_cell.addElement(
+        GraphicProperties(
+            fillcolor="#dddddd",
+            textareaverticalalign="middle",
+        )
+    )
+    style_cell.addElement(
+        ParagraphProperties(
+            writingmode="lr-tb",
+            textalign="right",
+        )
+    )
+    style_cell.addElement(
+        TableCellProperties(
+            paddingtop="1in",
+            paddingleft="0.1in",
+            paddingright="0.1in",
+        )
+    )
     doc.automaticstyles.addElement(style_cell)
 
-    ## Style for cells in header
+    # Style for cells in header
     style_cell_header = Style(name="ce2", family="table-cell")
-    style_cell_header.addElement(prop_graphic_header)
+    style_cell_header.addElement(
+        GraphicProperties(
+            fillcolor="#aaaaaa",
+            textareaverticalalign="middle",
+        )
+    )
+    style_cell_header.addElement(
+        ParagraphProperties(
+            writingmode="lr-tb",
+            textalign="right",
+        )
+    )
+    style_cell_header.addElement(
+        TableCellProperties(
+            paddingtop="0.05in",
+            paddingleft="0.1in",
+            paddingright="0.1in",
+        )
+    )
     doc.automaticstyles.addElement(style_cell_header)
 
-    style_column = Style(name="Wwide", family="table-column")
-    style_column.addElement(TableColumnProperties(columnwidth="1.7cm"))
+    # Style for rows
+    style_row = Style(name="ro1", family="table-row")
+    style_row.addElement(TableRowProperties(rowheight="1in"))
+    doc.automaticstyles.addElement(style_row)
+
+    # Style for columns
+    style_column = Style(name="co1", family="table-column")
+    style_column.addElement(
+        TableColumnProperties(columnwidth="15.0in", useoptimalcolumnwidth="false")
+    )
     doc.automaticstyles.addElement(style_column)
 
     table = Table(name="Table1")
     table.addElement(TableColumn(numbercolumnsrepeated=2, stylename=style_column))
 
-    tr = TableRow(defaultcellstylename=style_cell_header)
+    tr = TableRow(defaultcellstylename=style_cell_header, stylename=style_row)
     tc = TableCell()
-    tc.addElement(
-        P(
-            text="Header1",
-        )
-    )
+    tc.addElement(P(text="Header1"))
     tr.addElement(tc)
     tc = TableCell()
     tc.addElement(P(text="Header2"))
     tr.addElement(tc)
     table.addElement(tr)
 
-    tr = TableRow(defaultcellstylename=style_cell)
-    tc = TableCell()
+    tr = TableRow(defaultcellstylename=style_cell, stylename=style_row)
+    tc = TableCell(stylename=style_cell)
     tc.addElement(P(text="cell00"))
     tr.addElement(tc)
     tc = TableCell()
