@@ -15,7 +15,7 @@ from odf.style import (
     TableRowProperties,
 )
 from odf import dc
-from odf.text import P, List, ListItem, ListLevelStyleBullet, PageNumber, H
+from odf.text import P, List, ListItem, ListLevelStyleBullet, PageNumber, H, Span
 from odf.presentation import Header
 from odf.draw import Page, Frame, TextBox, Image
 from odf.table import (
@@ -144,6 +144,10 @@ def main():
     style_row.addElement(TableRowProperties(rowheight="2in"))
     doc.automaticstyles.addElement(style_row)
 
+    style_span = Style(name="sp1", family="text")
+    style_span.addElement(TextProperties(fontfamily="sans"))
+    doc.automaticstyles.addElement(style_span)
+
     NUM_ROWS = 10
     NUM_COLS = 5
     WIDTH_COL = 50
@@ -164,7 +168,9 @@ def main():
 
         table.addElement(TableColumn(defaultcellstylename="", stylename=style_column))
         tc = TableCell()
-        tc.addElement(P(text=f"Header{i}"))
+        p = P()
+        p.addElement(Span(text=f"Header{i}", stylename=style_span))
+        tc.addElement(p)
         tr.addElement(tc)
     table.addElement(tr)
 
@@ -172,7 +178,9 @@ def main():
         tr = TableRow(defaultcellstylename=style_cell, stylename=style_row)
         for j in range(NUM_COLS):
             tc = TableCell()
-            tc.addElement(P(text=f"cell({i:2d},{j:2d})"))
+            p = P()
+            p.addElement(Span(text=f"cell({i:2d},{j:2d})", stylename=style_span))
+            tc.addElement(p)
             tr.addElement(tc)
         table.addElement(tr)
 
