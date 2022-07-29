@@ -43,6 +43,18 @@ def main():
         )
     )
 
+    dpstyle = Style(name="dp1", family="drawing-page")
+    dpstyle.addElement(
+        DrawingPageProperties(
+            transitiontype="none",
+            # transitionstyle="move-from-top",
+            duration="PT00S",
+            displaypagenumber="true",
+            displayfooter="true",
+        )
+    )
+    doc.automaticstyles.addElement(dpstyle)
+
     # Create a masterpage
     masterpage = MasterPage(name="Master1", pagelayoutname=pagelayout)
     doc.masterstyles.addElement(masterpage)
@@ -85,7 +97,9 @@ def main():
     # Create a table on a new page
     page = Page(masterpagename=masterpage)
     doc.presentation.addElement(page)
+
     frame = Frame(
+        stylename=style_master1_table,
         width="648pt",
         height="105pt",
         x="40pt",
@@ -100,81 +114,59 @@ def main():
     # Style for cells
     style_cell = Style(name="ce1", family="table-cell")
     style_cell.addElement(
-        GraphicProperties(
-            fillcolor="#dddddd",
-            textareaverticalalign="middle",
-        )
+        GraphicProperties(fillcolor="#dddddd", textareaverticalalign="middle")
     )
+    style_cell.addElement(ParagraphProperties(writingmode="lr-tb", textalign="right"))
     style_cell.addElement(
-        ParagraphProperties(
-            writingmode="lr-tb",
-            textalign="right",
-        )
-    )
-    style_cell.addElement(
-        TableCellProperties(
-            paddingtop="1in",
-            paddingleft="0.1in",
-            paddingright="0.1in",
-        )
+        TableCellProperties(paddingtop="1in", paddingleft="0.1in", paddingright="0.1in")
     )
     doc.automaticstyles.addElement(style_cell)
 
     # Style for cells in header
     style_cell_header = Style(name="ce2", family="table-cell")
     style_cell_header.addElement(
-        GraphicProperties(
-            fillcolor="#aaaaaa",
-            textareaverticalalign="middle",
-        )
+        GraphicProperties(fillcolor="#aaaaaa", textareaverticalalign="middle")
     )
     style_cell_header.addElement(
-        ParagraphProperties(
-            writingmode="lr-tb",
-            textalign="right",
-        )
+        ParagraphProperties(writingmode="lr-tb", textalign="right")
     )
     style_cell_header.addElement(
         TableCellProperties(
-            paddingtop="0.05in",
-            paddingleft="0.1in",
-            paddingright="0.1in",
+            paddingtop="0.05in", paddingleft="0.1in", paddingright="0.1in"
         )
     )
     doc.automaticstyles.addElement(style_cell_header)
 
     # Style for rows
     style_row = Style(name="ro1", family="table-row")
-    style_row.addElement(TableRowProperties(rowheight="1in"))
+    style_row.addElement(TableRowProperties(rowheight="2in"))
     doc.automaticstyles.addElement(style_row)
 
     # Style for columns
     style_column = Style(name="co1", family="table-column")
-    style_column.addElement(
-        TableColumnProperties(columnwidth="15.0in", useoptimalcolumnwidth="false")
-    )
+    style_column.addElement(TableColumnProperties(columnwidth="5.5in"))
     doc.automaticstyles.addElement(style_column)
 
-    table = Table(name="Table1")
-    table.addElement(TableColumn(numbercolumnsrepeated=2, stylename=style_column))
+    NUM_ROWS = 10
+    NUM_COLS = 5
+
+    table = Table(usebandingcolumnsstyles="false", usebandingrowsstyles="false")
 
     tr = TableRow(defaultcellstylename=style_cell_header, stylename=style_row)
-    tc = TableCell()
-    tc.addElement(P(text="Header1"))
-    tr.addElement(tc)
-    tc = TableCell()
-    tc.addElement(P(text="Header2"))
-    tr.addElement(tc)
+    for i in range(NUM_COLS):
+        table.addElement(TableColumn(defaultcellstylename="", stylename=style_column))
+        tc = TableCell()
+        tc.addElement(P(text=f"Header{i}"))
+        tr.addElement(tc)
     table.addElement(tr)
 
-    tr = TableRow(defaultcellstylename=style_cell, stylename=style_row)
-    tc = TableCell(stylename=style_cell)
-    tc.addElement(P(text="cell00"))
-    tr.addElement(tc)
-    tc = TableCell()
-    tc.addElement(P(text="cell01"))
-    tr.addElement(tc)
-    table.addElement(tr)
+    for i in range(NUM_ROWS):
+        tr = TableRow(defaultcellstylename=style_cell, stylename=style_row)
+        for j in range(NUM_COLS):
+            tc = TableCell()
+            tc.addElement(P(text=f"cell({i:2d},{j:2d})"))
+            tr.addElement(tc)
+        table.addElement(tr)
 
     frame.addElement(table)
 
