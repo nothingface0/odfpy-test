@@ -119,13 +119,17 @@ def main():
     style_cell.addElement(
         GraphicProperties(
             fillcolor="#dddddd",
-            backgroundcolor="#dddddd",
             textareaverticalalign="middle",
         )
     )
     style_cell.addElement(ParagraphProperties(writingmode="lr-tb", textalign="right"))
     style_cell.addElement(
-        TableCellProperties(paddingtop="1in", paddingleft="0.1in", paddingright="0.1in")
+        TableCellProperties(
+            paddingtop="1in",
+            paddingleft="0.1in",
+            paddingright="0.1in",
+            backgroundcolor="#dddddd",
+        )
     )
     doc.automaticstyles.addElement(style_cell)
 
@@ -135,7 +139,6 @@ def main():
         GraphicProperties(
             fillcolor="#aaaaaa",
             textareaverticalalign="middle",
-            backgroundcolor="#aaaaaa",
         )
     )
     style_cell_header.addElement(
@@ -143,7 +146,10 @@ def main():
     )
     style_cell_header.addElement(
         TableCellProperties(
-            paddingtop="0.05in", paddingleft="0.1in", paddingright="0.1in"
+            paddingtop="0.05in",
+            paddingleft="0.1in",
+            paddingright="0.1in",
+            backgroundcolor="#aaaaaa",
         )
     )
     doc.automaticstyles.addElement(style_cell_header)
