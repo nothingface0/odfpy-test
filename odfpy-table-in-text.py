@@ -8,7 +8,9 @@ doc = OpenDocumentText()
 # Create a style for the table content. One we can modify
 # later in the word processor.
 tablecontents = Style(name="Table Contents", family="paragraph")
-tablecontents.addElement(ParagraphProperties(numberlines="false", linenumber="0"))
+tablecontents.addElement(
+    ParagraphProperties(numberlines="false", linenumber="0", backgroundcolor="#aaaaaa")
+)
 doc.styles.addElement(tablecontents)
 
 # Create automatic styles for the column widths.

@@ -11,6 +11,7 @@ from odf.style import (
     DrawingPageProperties,
     TableProperties,
     TableCellProperties,
+    TableColumnProperties,
 )
 from odf import dc
 from odf.text import P, List, ListItem, ListLevelStyleBullet, PageNumber, H
@@ -92,19 +93,32 @@ def main():
     page.addElement(frame)
 
     prop_graphic = GraphicProperties(fillcolor="#ffffff")
-    prop_par = ParagraphProperties(textalign="center")
+    prop_graphic_header = GraphicProperties(fillcolor="#dddddd")
 
     ## Style for cells
     style_cell = Style(name="ce1", family="table-cell")
     style_cell.addElement(prop_graphic)
     doc.automaticstyles.addElement(style_cell)
 
-    table = Table(name="Table1", usefirstrowstyles="true")
-    table.addElement(TableColumn(numbercolumnsrepeated=2))
+    ## Style for cells in header
+    style_cell_header = Style(name="ce2", family="table-cell")
+    style_cell_header.addElement(prop_graphic_header)
+    doc.automaticstyles.addElement(style_cell_header)
 
-    tr = TableRow()
+    style_column = Style(name="Wwide", family="table-column")
+    style_column.addElement(TableColumnProperties(columnwidth="1.7cm"))
+    doc.automaticstyles.addElement(style_column)
+
+    table = Table(name="Table1")
+    table.addElement(TableColumn(numbercolumnsrepeated=2, stylename=style_column))
+
+    tr = TableRow(defaultcellstylename=style_cell_header)
     tc = TableCell()
-    tc.addElement(P(text="Header1"))
+    tc.addElement(
+        P(
+            text="Header1",
+        )
+    )
     tr.addElement(tc)
     tc = TableCell()
     tc.addElement(P(text="Header2"))
